@@ -232,9 +232,18 @@ function initGame(): void {
   // TIME. Five bells ring out, the shift counter rolls up five, and the
   // director's horn is synced away so the bells own the moment.
   const hatchToll = (): void => {
-    const n = rounds.round + 5;
+    const from = rounds.round;
+    const n = from + 5;
     audio.syncRound(n);
-    rounds.startRound(n);
+    const ev = rounds.startRound(n);
+    // the toll is a shift change like any other: the tally rolls NOW, not at
+    // the next natural bell, and the shifts it charged for still owe their
+    // specials cadence (user bug 2026-08-07 — the counter sat stale and the
+    // Lamp Man's shift could be stepped clean over)
+    if (ev.roundStarted) {
+      hud.setRound(ev.roundStarted);
+      specials.onRoundStart(ev.roundStarted, camera.position, from);
+    }
     const e = audio.engine;
     if (e && e.running) void import('./audio/sfx').then((s) => s.bellSequence(e.ctx, e.master));
     voice.request('bell.2');

@@ -2,12 +2,38 @@
 
 Black Ops 1 zombies × cave diving. Solo, single-run, browser game (TypeScript + Three.js).
 
+![The title screen](docs/showcase/title-screen.webp)
+
 - **The pitch:** [PITCH.md](PITCH.md)
 - **What the game is:** [DESIGN.md](DESIGN.md)
 - **The world, character, and every asset's identity:** [LORE.md](LORE.md)
 - **Build status and next step:** [PLAN.md](PLAN.md) (see the STATUS line and Session Protocol)
 
 Design and lore are **locked** (2026-07-18): build sessions implement and tune; they do not redesign.
+
+## The dive
+
+You go down a flooded sinkhole to recover forty-one people and one artefact.
+Air is the clock, the shift bell keeps ringing, and nothing you kill buys you
+time.
+
+| | |
+|---|---|
+| ![The shore camp above the pool](docs/showcase/the-shore.webp) **The shore.** The last dry ground. Everything below it is on your air. | ![A crew carrier, with a voice line under it](docs/showcase/crew-and-voice.webp) **The crew.** Forty-one to bring up, each one a name, each one talking. |
+| ![A pack of Drowned swimming up through the light shafts](docs/showcase/the-drowned.webp) **The Drowned.** They come up the shafts at you, and the shift bell only makes more. | ![A figure standing in a tunnel, lit only by the lamp at his side](docs/showcase/the-lamp-man.webp) **The Lamp Man.** No AI, no hitbox, no confirmation. He stands, and then he doesn't. |
+| ![The Angler head-on, its lure hung ahead of its jaw](docs/showcase/the-angler.webp) **The Angler.** The lure is the lie — it hangs exactly like the Lamp Man's lamp. | ![Two hard-suits standing in the dark, brass helmets lit](docs/showcase/the-guardians.webp) **The Guardians.** Condemned hard-suits, still walking their posts. |
+| ![A FIN KICK DRAUGHT dispenser on the cave floor](docs/showcase/the-draughts.webp) **The draughts.** The site issues; it does not sell. | ![The power lever on a rock pillar](docs/showcase/the-power.webp) **The power.** Throw it and the arteries light. |
+| ![A HARPOON RIFLE FREE ISSUE sign over a tunnel mouth](docs/showcase/the-free-issue.webp) **Free issue.** The belt carries what opens the way down. | ![The Heart glowing red in a pale stone apse](docs/showcase/the-heart.webp) **The Heart.** Lift it and the only advice left is *ascend*. |
+
+![The Ascent — the site objects](docs/showcase/the-ascent.webp)
+
+The toolkit ships with the game — the title screen's **DEVELOPER TOOLS** door
+opens the level editor the cave was built in:
+
+![The level editor, with the cave graph laid out in 3D](docs/showcase/the-level-editor.webp)
+
+Full-resolution PNGs of every shot are in [`docs/screens/`](docs/screens);
+`node scripts/showcase.mjs` rebuilds the WebP set above from them.
 
 ## Playing it
 

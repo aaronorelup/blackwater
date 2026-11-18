@@ -16,6 +16,13 @@ import { GraphPath, nearestNodeId, type Vec3 } from './pathing';
 
 export type SpecialKind = 'angler' | 'shade' | 'guardian' | 'lampman';
 
+/** Did the shift interval (from, to] cross a Lamp Man relocation multiple?
+ *  Counted by interval rather than `to % every === 0` so the hatch's five-shift
+ *  toll cannot step clean over his shift (user bug 2026-08-07). */
+export function lampManDue(from: number, to: number, every: number): boolean {
+  return to > 0 && Math.floor(to / every) > Math.floor(Math.max(0, from) / every);
+}
+
 export interface Special {
   kind: SpecialKind;
   group: THREE.Group;
@@ -420,8 +427,14 @@ export class SpecialManager {
   }
 
   /** Shift rollover: guardian respawns, the Angler's spawn roll, and the
-   *  Lamp Man's 7-shift cadence (DESIGN §8.5). */
-  onRoundStart(round: number, playerPos: THREE.Vector3): void {
+   *  Lamp Man's 7-shift cadence (DESIGN §8.5).
+   *
+   *  `fromRound` is the shift we LEFT (default: the one before this). The
+   *  hatch's toll jumps five at once, and the shifts it charges for still owe
+   *  their cadence — the Lamp Man fires if the jumped interval crossed a
+   *  multiple, so cranking past shift 7 can no longer skip him entirely
+   *  (user bug 2026-08-07). The Angler still rolls once, at the arrival shift. */
+  onRoundStart(round: number, playerPos: THREE.Vector3, fromRound = round - 1): void {
     for (const postId of this.downedPosts) {
       const n = NODES.find((x) => x.id === postId);
       if (n) this.spawnGuardian(n); // the suit walks its post again
@@ -440,9 +453,11 @@ export class SpecialManager {
       );
       if (darks.length) this.spawnAngler(darks[Math.floor(Math.random() * darks.length)].id);
     }
-    // every Nth shift the lamp relocates — despawn + fresh tunnel (rule 3)
+    // every Nth shift the lamp relocates — despawn + fresh tunnel (rule 3).
+    // Counted by interval, not by remainder, so a five-shift jump that steps
+    // over the multiple still relocates him.
     const L = TUNING.specials.lampman;
-    if (round > 0 && round % L.everyShifts === 0) this.spawnLampMan();
+    if (lampManDue(fromRound, round, L.everyShifts)) this.spawnLampMan();
   }
 
   update(dt: number, ctx: SpecialCtx): void {
